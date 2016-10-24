@@ -1,42 +1,57 @@
 {
-  "name": "koa-swagger",
-  "version": "0.2.9",
+  "name": "koa-swagger2",
+  "version": "1.0.0",
   "description": "request + response sanitation/validation against swagger specs",
-  "main": "lib/",
+  "main": "src/",
   "scripts": {
-    "test": "mocha --require co-mocha test/",
-    "lint": "eslint lib/ test/"
+    "prepublish": "npm run build",
+    "build": "babel src/ --out-dir lib",
+    "test": "jest",
+    "lint": "eslint src/ test/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rricard/koa-swagger.git"
+    "url": "https://github.com/factro/koa-swagger.git"
   },
   "keywords": [
     "koa",
     "swagger",
     "api"
   ],
-  "author": "Robin Ricard",
+  "author": "marudor",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rricard/koa-swagger/issues"
+    "url": "https://github.com/factro/koa-swagger/issues"
   },
-  "homepage": "https://github.com/rricard/koa-swagger",
+  "homepage": "https://github.com/factro/koa-swagger",
+  "jest": {
+    "testEnvironment": "node",
+    "testPathDirs": [
+      "src"
+    ]
+  },
   "dependencies": {
+    "babel-polyfill": "^6.16.0",
     "debug": "^2.1.3",
     "jayschema": "^0.3.1",
-    "json-schema-deref-sync": "^0.1.1",
-    "koa-bodyparser": "^1.5.0",
+    "json-schema-deref-sync": "^0.3.1",
+    "koa-bodyparser": "^3.2.0",
     "routington": "^1.0.3"
   },
   "devDependencies": {
-    "bluebird": "^2.9.24",
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
+    "babel-plugin-transform-class-properties": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "bluebird": "^3.0.0",
     "co-mocha": "^1.1.0",
-    "co-supertest": "0.0.8",
-    "eslint": "^0.19.0",
-    "koa": "^1.2.4",
-    "koa-route": "^2.4.1",
-    "mocha": "^2.2.4",
-    "supertest": "^0.15.0"
+    "co-supertest": "^0.0.10",
+    "eslint": "^3.8.1",
+    "eslint-config-marudor": "^3.0.1",
+    "jest": "^16.0.2",
+    "koa": "^2.0.0-alpha.7",
+    "koa-route": "^3.2.0",
+    "mocha": "^3.0.0",
+    "supertest": "^2.0.0"
   }
 }

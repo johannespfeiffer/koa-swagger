@@ -1,35 +1,7 @@
-'use strict';
+import Debug from 'debug';
+import * as match from './matchers';
+const debug = Debug('swagger:check');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ValidationError = undefined;
-exports.swaggerVersion = swaggerVersion;
-exports.parameter = parameter;
-exports.parameters = parameters;
-exports.body = body;
-exports.sentHeader = sentHeader;
-exports.sentHeaders = sentHeaders;
-
-var _debug = require('debug');
-
-var _debug2 = _interopRequireDefault(_debug);
-
-var _matchers = require('./matchers');
-
-var match = _interopRequireWildcard(_matchers);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var debug = (0, _debug2.default)('swagger:check');
 
 /**
  * An error thrown when validating parameters
@@ -37,37 +9,23 @@ var debug = (0, _debug2.default)('swagger:check');
  * @param status {number} HTTP status override
  * @constructor
  */
-
-var ValidationError = exports.ValidationError = function (_Error) {
-  _inherits(ValidationError, _Error);
-
-  function ValidationError() {
-    var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    var status = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
-
-    _classCallCheck(this, ValidationError);
-
-    var _this = _possibleConstructorReturn(this, (ValidationError.__proto__ || Object.getPrototypeOf(ValidationError)).call(this, message));
-
-    _this.name = 'ValidationError';
-
-    _this.status = status;
-    return _this;
+export class ValidationError extends Error {
+  name = 'ValidationError';
+  constructor(message = '', status = 400) {
+    super(message);
+    this.status = status;
   }
-
-  return ValidationError;
-}(Error);
+}
 
 /**
  * Defines if the spec version is supported by the middleware
  * @param def {Swagger} The swagger complete definition
  * @throws {ValidationError} If the version is not supported
  */
-
-
-function swaggerVersion(def) {
+export function swaggerVersion(def) {
   if (def.swagger !== '2.0') {
-    throw new ValidationError('Swagger ' + def.swagger + 'is not supported by this middleware.');
+    throw new ValidationError(`Swagger ${ def.swagger
+      }is not supported by this middleware.`);
   }
 }
 
@@ -79,18 +37,18 @@ function swaggerVersion(def) {
  * @return {*} The cleaned value
  * @throws {ValidationError} A possible validation error
  */
-function parameter(validator, def, context) {
-  var value = match.fromContext(def.name, def.in, context);
+export function parameter(validator, def, context) {
+  let value = match.fromContext(def.name, def.in, context);
 
   // Check requirement
   if (def.required && !value) {
-    throw new ValidationError(def.name + ' is required');
+    throw new ValidationError(`${def.name } is required`);
   } else if (!value) {
     return def.default;
   }
 
   // Select the right schema according to the spec
-  var schema = void 0;
+  let schema;
   if (def.in === 'body') {
     schema = def.schema;
     // TODO: clean and sanitize recursively
@@ -115,16 +73,17 @@ function parameter(validator, def, context) {
       } else if (def.collectionFormat === 'multi') {
         throw new ValidationError('multi collectionFormat query parameters currently unsupported');
       } else {
-        throw new ValidationError('unknown collectionFormat ' + def.collectionFormat);
+        throw new ValidationError(`unknown collectionFormat ${ def.collectionFormat}`);
       }
     }
 
     schema = def;
   }
 
-  var err = validator(value, schema);
+  const err = validator(value, schema);
   if (err.length > 0) {
-    throw new ValidationError(def.name + ' has an invalid format: ' + JSON.stringify(err));
+    throw new ValidationError(`${def.name } has an invalid format: ${
+      JSON.stringify(err)}`);
   }
 
   return value;
@@ -138,10 +97,10 @@ function parameter(validator, def, context) {
  * @return {object} The checked parameters in a dict
  * @throws {ValidationError}
  */
-function parameters(validator, defs, context) {
-  var errorMessages = [];
-  var parameterDict = {};
-  defs.forEach(function (def) {
+export function parameters(validator, defs, context) {
+  const errorMessages = [];
+  const parameterDict = {};
+  defs.forEach((def) => {
     try {
       parameterDict[def.name] = parameter(validator, def, context);
     } catch (e) {
@@ -164,9 +123,9 @@ function parameters(validator, defs, context) {
  * @param body {*} The body to send back
  * @throws {ValidationError} When the body does not respect the schema
  */
-function body(validator, schema, body) {
+export function body(validator, schema, body) {
   // TODO: clean and sanitize recursively
-  var err = validator(body, schema);
+  const err = validator(body, schema);
   if (err.length > 0) {
     debug('Implementation Spec Violation: Unmatching response format');
     debug(err);
@@ -182,13 +141,14 @@ function body(validator, schema, body) {
  * @param value {*} The header value
  * @throws {ValidationError} When the header does not respect the schema
  */
-function sentHeader(validator, def, name, value) {
+export function sentHeader(validator, def, name, value) {
   if (!value && def.default) {
     return def.def.default;
   }
-  var err = validator(value, def.schema);
+  const err = validator(value, def.schema);
   if (err) {
-    debug('Implementation Spec Violation: Unmatching sent header format: ' + name);
+    debug(`Implementation Spec Violation: Unmatching sent header format: ${
+      name}`);
     debug(err);
     throw new ValidationError('Unmatching response format', 500);
   }
@@ -201,9 +161,9 @@ function sentHeader(validator, def, name, value) {
  * @param sentHeaders {object} The sent headers
  * @throws {ValidationError} When the headers does not respect the schema
  */
-function sentHeaders(validator, defs, sentHeaders) {
-  var errored = false;
-  Object.keys(defs).forEach(function (name) {
+export function sentHeaders(validator, defs, sentHeaders) {
+  let errored = false;
+  Object.keys(defs).forEach((name) => {
     try {
       sentHeader(validator, defs[name], name, sentHeaders[name]);
     } catch (e) {
