@@ -5,9 +5,10 @@ import Promise from 'bluebird';
 
 Promise.promisifyAll(supertest.Test.prototype);
 
-describe('README\'s code example', () => {
+describe('code example', () => {
   const app = require('../__testData__/app');
-  const request = supertest(app.listen());
+  const server = app.listen();
+  const request = supertest(server);
 
   it('should 404 or 405 when accessing the wrong endpoint', async () => {
     await request
@@ -42,5 +43,9 @@ describe('README\'s code example', () => {
     .expect(200)
     .expect(/Hello bob\./)
     .endAsync();
+  });
+
+  afterAll(() => {
+    server.close();
   });
 });

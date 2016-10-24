@@ -2,7 +2,7 @@
   "name": "koa-swagger2",
   "version": "1.0.0",
   "description": "request + response sanitation/validation against swagger specs",
-  "main": "src/",
+  "main": "lib/",
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src/ --out-dir lib",
