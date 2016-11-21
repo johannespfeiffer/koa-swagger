@@ -40,6 +40,10 @@ const SPEC = {
         message: {
           type: 'string',
         },
+        additional: {
+          type: 'string',
+          'x-nullable': true,
+        },
       },
     },
   },
@@ -53,6 +57,7 @@ const _ = require('koa-route');
 app.use(_.get('/api/hello/:name', (ctx, name) => {
   ctx.body = {
     message: `Hello ${ name }${ctx.request.query.punctuation}`,
+    additional: undefined,
   };
 }));
 module.exports = app;
