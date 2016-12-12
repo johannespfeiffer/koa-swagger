@@ -1,5 +1,4 @@
 /*eslint-disable no-eval */
-import 'babel-polyfill';
 import supertest from 'supertest';
 import Promise from 'bluebird';
 

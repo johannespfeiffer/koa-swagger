@@ -1,6 +1,6 @@
 {
   "sourceMaps": true,
-  "presets": ["latest"],
+  "presets": ["node6", "es2017"],
   "plugins": [
     "transform-class-properties"
   ]

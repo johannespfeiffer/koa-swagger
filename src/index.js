@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import deref from 'json-schema-deref-sync';
 import Jay from 'jayschema';
 import * as check from './checkers';
