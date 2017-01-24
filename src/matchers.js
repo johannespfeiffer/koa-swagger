@@ -87,7 +87,7 @@ export function status(def, status) {
   if (!def[cast] && !def.default) {
     debug('Implementation Spec Violation: Unsupported response status');
     debug(`Unexpected ${ status}`);
-    throw new MatchingError('Unmatching response format', 500);
+    throw new MatchingError(`Unmatching response format ${status}`, 500);
   }
   return def[cast] || def.default;
 }
