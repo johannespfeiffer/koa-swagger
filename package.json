@@ -1,5 +1,5 @@
 {
-  "name": "koa-swagger2",
+  "name": "@smartclip/koa-swagger2",
   "version": "1.0.4",
   "description": "request + response sanitation/validation against swagger specs",
   "main": "lib/",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/factro/koa-swagger.git"
+    "url": "https://github.com/johannespfeiffer/koa-swagger.git"
   },
   "keywords": [
     "koa",
@@ -21,9 +21,9 @@
   "author": "marudor",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/factro/koa-swagger/issues"
+    "url": "https://github.com/johannespfeiffer/koa-swagger/issues"
   },
-  "homepage": "https://github.com/factro/koa-swagger",
+  "homepage": "https://github.com/johannespfeiffer/koa-swagger",
   "jest": {
     "testEnvironment": "node",
     "testPathDirs": [
