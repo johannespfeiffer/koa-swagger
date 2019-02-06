@@ -33,7 +33,7 @@
   "dependencies": {
     "debug": "^2.6.0",
     "jayschema": "^0.3.1",
-    "json-schema-deref-sync": "^0.3.3",
+    "json-schema-deref-sync": "^0.8.0",
     "koa-bodyparser": "^3.2.0",
     "routington": "^1.0.3"
   },
